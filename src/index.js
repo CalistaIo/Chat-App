@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         io.emit('message', 'A user has left!');
-    })
+    });
     // socket.emit('countUpdated', count);
 
     // socket.on('increment', () => {
@@ -32,7 +32,12 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (mesg) => {
         io.emit('message', mesg);
-    })
+    });
+
+    socket.on('sendLocation', (coordinates) => {
+        const mesg = 'https://google.com/maps?q=' + coordinates.latitude + ',' + coordinates.longitude;
+        io.emit('message', mesg);
+    });
 });
 
 server.listen(port, () => {
