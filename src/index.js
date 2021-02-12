@@ -6,6 +6,7 @@ const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 const socketio = require('socket.io');
 const io = socketio(server);
+const Filter = require('bad-words');
 
 const publicDirectoryPath = path.join(__dirname, '..', 'public');
 app.use(express.static(publicDirectoryPath));
@@ -30,13 +31,19 @@ io.on('connection', (socket) => {
     //     io.emit('countUpdated', count);
     // });
 
-    socket.on('sendMessage', (mesg) => {
-        io.emit('message', mesg);
+    socket.on('sendMessage', (mesg, callback) => {
+        const filter = new Filter();
+        if (filter.isProfane(mesg)) {
+            return callback('Profanity is not allowed!');
+        }
+        io.emit('message', mesg); // only emit message if it does not contain any profanities
+        callback();
     });
 
-    socket.on('sendLocation', (coordinates) => {
+    socket.on('sendLocation', (coordinates, callback) => {
         const mesg = 'https://google.com/maps?q=' + coordinates.latitude + ',' + coordinates.longitude;
-        io.emit('message', mesg);
+        io.emit('locationMessage', mesg);
+        callback();
     });
 });
 
