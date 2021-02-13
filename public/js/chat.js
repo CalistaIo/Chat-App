@@ -11,6 +11,10 @@ const $messages = document.querySelector('#messages');
 const messageTemplate = document.querySelector('#message-template').innerHTML;
 const locationTemplate = document.querySelector('#location-template').innerHTML;
 
+// Options
+// location.search contains query string part of URL
+const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix: true});
+
 // const button = document.getElementById('increment');
 
 // socket.on('countUpdated', (count) => {
@@ -25,7 +29,8 @@ const locationTemplate = document.querySelector('#location-template').innerHTML;
 socket.on('message', (mesg) => {
     const html = Mustache.render(messageTemplate, {
         message: mesg.text,
-        createdAt: moment(mesg.createdAt).format('h:mm a')});
+        createdAt: moment(mesg.createdAt).format('h:mm a'),
+        username});
     $messages.insertAdjacentHTML('beforeend', html);
 });
 
@@ -33,7 +38,8 @@ socket.on('message', (mesg) => {
 socket.on('locationMessage', (location) => {
     const html = Mustache.render(locationTemplate, {
         location: location.text,
-        createdAt: moment(location.text).format('h:mm a')});
+        createdAt: moment(location.text).format('h:mm a'),
+        username});
     $messages.insertAdjacentHTML('beforeend', html);
 })
 
@@ -71,4 +77,10 @@ $sendLocationButton.addEventListener('click', (e) => {
                 console.log('Location shared!');
             });
     });
+});
+
+// join event is emitted when someone joins specified chat room with specified username
+socket.emit('join', {
+    username,
+    room
 });

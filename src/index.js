@@ -17,11 +17,11 @@ app.use(express.static(publicDirectoryPath));
 // Listen to event to occur
 io.on('connection', (socket) => {
     console.log('New WebSocket connection');
-    socket.emit('message', generateMessage('Welcome!')); // emit to current socket
-    socket.broadcast.emit('message', generateMessage('A new user has joined!')); // emit to all sockets other than current socket
+    // socket.emit('message', generateMessage('Welcome!')); // emit to current socket
+    // socket.broadcast.emit('message', generateMessage('A new user has joined!')); // emit to all sockets other than current socket
 
     socket.on('disconnect', () => {
-        io.emit('message', generateMessage('A user has left!'));
+        io.emit('message', generateMessage(`A user has left!`));
     });
     // socket.emit('countUpdated', count);
 
@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
         if (filter.isProfane(mesg)) {
             return callback('Profanity is not allowed!');
         }
-        io.emit('message', generateMessage(mesg)); // only emit message if it does not contain any profanities
+        io.to('101').emit('message', generateMessage(mesg)); // only emit message if it does not contain any profanities
         callback();
     });
 
@@ -45,6 +45,15 @@ io.on('connection', (socket) => {
         const mesg = 'https://google.com/maps?q=' + coordinates.latitude + ',' + coordinates.longitude;
         io.emit('locationMessage', generateLocationMessage(mesg));
         callback();
+    });
+
+    socket.on('join', ({username, room}) => {
+        socket.join(room);
+
+        // socket.emit, io.emit, socket.broadcast.emit
+        // io.to.emit, socket.broadcast.to.emit
+        socket.emit('message', generateMessage('Welcome!'));
+        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined!`));
     });
 });
 
