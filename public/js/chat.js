@@ -23,7 +23,9 @@ const locationTemplate = document.querySelector('#location-template').innerHTML;
 
 // need to access template and location where template is inserted
 socket.on('message', (mesg) => {
-    const html = Mustache.render(messageTemplate, {message: mesg});
+    const html = Mustache.render(messageTemplate, {
+        message: mesg.text,
+        createdAt: moment(mesg.createdAt).format('h:mm a')});
     $messages.insertAdjacentHTML('beforeend', html);
 });
 

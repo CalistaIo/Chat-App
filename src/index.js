@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000;
 const socketio = require('socket.io');
 const io = socketio(server);
 const Filter = require('bad-words');
+const {generateMessage} = require('./utils/messages.js');
 
 const publicDirectoryPath = path.join(__dirname, '..', 'public');
 app.use(express.static(publicDirectoryPath));
@@ -16,11 +17,11 @@ app.use(express.static(publicDirectoryPath));
 // Listen to event to occur
 io.on('connection', (socket) => {
     console.log('New WebSocket connection');
-    socket.emit('message', 'Welcome!'); // emit to current socket
-    socket.broadcast.emit('message', 'A new user has joined!'); // emit to all sockets other than current socket
+    socket.emit('message', generateMessage('Welcome!')); // emit to current socket
+    socket.broadcast.emit('message', generateMessage('A new user has joined!')); // emit to all sockets other than current socket
 
     socket.on('disconnect', () => {
-        io.emit('message', 'A user has left!');
+        io.emit('message', generateMessage('A user has left!'));
     });
     // socket.emit('countUpdated', count);
 
@@ -36,7 +37,7 @@ io.on('connection', (socket) => {
         if (filter.isProfane(mesg)) {
             return callback('Profanity is not allowed!');
         }
-        io.emit('message', mesg); // only emit message if it does not contain any profanities
+        io.emit('message', generateMessage(mesg)); // only emit message if it does not contain any profanities
         callback();
     });
 
