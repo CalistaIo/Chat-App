@@ -104,6 +104,8 @@ button:disabled {
     display: flex;
     flex-direction: column;
     max-height: 100vh;
+    background: url('../img/chatroom.jpeg');
+    background-size: no-repeat;
 }
 
 .chat__messages {
@@ -115,7 +117,13 @@ button:disabled {
 /* Message Styles */
 
 .message {
-    margin-bottom: 16px;   
+    margin-bottom: 16px;
+    background: white;
+    width: 50%;
+    padding: 0.5rem;
+    margin: 1rem 0;
+    border: 3px solid black;
+    border-radius: 8px;
 }
 
 .message__name {
