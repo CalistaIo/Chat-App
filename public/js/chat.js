@@ -10,6 +10,7 @@ const $messages = document.querySelector('#messages');
 // Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML;
 const locationTemplate = document.querySelector('#location-template').innerHTML;
+const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML;
 
 // Options
 // location.search contains query string part of URL
@@ -89,3 +90,11 @@ socket.emit('join', {
         location.href = './index.html';
     }
 });
+
+socket.on('roomData', ({room, users}) => {
+    const html = Mustache.render(sidebarTemplate, {
+        room,
+        users
+    });
+    document.querySelector('#sidebar').innerHTML = html;
+})

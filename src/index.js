@@ -25,6 +25,10 @@ io.on('connection', (socket) => {
         const user = removeUser(socket.id);
         if (user) {
             io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`));
+            io.to(user.room).emit('roomData', {
+                room: user.room,
+                users: getUsersInRoom(user.room)
+            })
         } // message is only sent if user leaving is valid
     });
     // socket.emit('countUpdated', count);
@@ -69,7 +73,11 @@ io.on('connection', (socket) => {
         // socket.emit, io.emit, socket.broadcast.emit
         // io.to.emit, socket.broadcast.to.emit
         socket.emit('message', generateMessage('Admin', 'Welcome!'));
-        socket.broadcast.to(room).emit('message', generateMessage('Admin', `${user.username} has joined!`));
+        socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined!`));
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUsersInRoom(user.room)
+        });
         callback();
     });
 });
