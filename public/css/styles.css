@@ -40,15 +40,16 @@ input {
 button {
     cursor: pointer;
     padding: 12px;
-    background: #7C5CBF;
+    background: #C45655;
     border: none;
+    border-radius: 5px;
     color: white;
     font-size: 16px;
     transition: background .3s ease;
 }
 
 button:hover {
-    background: #6b47b8;
+    background: #9D4544;
 }
 
 button:disabled {
@@ -59,7 +60,7 @@ button:disabled {
 /* Join Page Styles */
 
 .centered-form {
-    background: #333744;
+    background: #6C503C;
     width: 100vw;
     height: 100vh;   
     display: flex;
@@ -72,6 +73,10 @@ button:disabled {
     background: #F7F7FA;
     padding: 24px;
     width: 250px;
+}
+
+.centered-form__box > div {
+    text-align: center;
 }
 
 .centered-form button {
@@ -92,7 +97,7 @@ button:disabled {
 .chat__sidebar {
     height: 100vh;
     color: white;
-    background: #333744;
+    background: #6C503C;
     width: 225px;
     overflow-y: scroll
 }
@@ -105,7 +110,8 @@ button:disabled {
     flex-direction: column;
     max-height: 100vh;
     background: url('../img/chatroom.jpeg');
-    background-size: no-repeat;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .chat__messages {
@@ -116,13 +122,13 @@ button:disabled {
 
 /* Message Styles */
 
-.message {
+.message, .location {
     margin-bottom: 16px;
     background: white;
     max-width: 50%;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     margin: 1rem 0;
-    border: 3px solid black;
+    border: 2px solid black;
     border-radius: 8px;
 }
 
@@ -188,4 +194,8 @@ button:disabled {
     list-style-type: none;
     font-weight: 300;
     padding: 12px 24px 0 24px;
+}
+
+#message-form input {
+    border-radius: 5px;
 }
