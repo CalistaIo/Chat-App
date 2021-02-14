@@ -26,6 +26,28 @@ const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix: true});
 //     socket.emit('increment');
 // }
 
+// new message
+const autoscroll = () => {
+    // new message element
+    const $newMessage = $messages.lastElementChild;
+    // height of new message
+    const newMessageStyles = getComputedStyle($newMessage);
+    const newMessageHeight = $newMessage.offsetHeight + parseInt(newMessageStyles.marginBottom) + parseInt(newMessageStyles.marginTop);
+
+    // visible height
+    const visibleHeight = $messages.offsetHeight;
+
+    // height of messages container
+    const containerHeight = $messages.scrollHeight;
+
+    // how far have I scrolled
+    const scrollOffset = $messages.scrollTop + visibleHeight;
+
+    if (containerHeight - newMessageHeight <= scrollOffset) {
+        $messages.scrollTop = $messages.scrollHeight;
+    };
+};
+
 // need to access template and location where template is inserted
 socket.on('message', (mesg) => {
     const html = Mustache.render(messageTemplate, {
@@ -33,6 +55,7 @@ socket.on('message', (mesg) => {
         createdAt: moment(mesg.createdAt).format('h:mm a'),
         username: mesg.username});
     $messages.insertAdjacentHTML('beforeend', html);
+    autoscroll();
 });
 
 // display url as link
@@ -42,6 +65,7 @@ socket.on('locationMessage', (location) => {
         createdAt: moment(location.text).format('h:mm a'),
         username: location.username});
     $messages.insertAdjacentHTML('beforeend', html);
+    autoscroll();
 })
 
 $messageForm.addEventListener('submit', (e) => {
@@ -97,4 +121,4 @@ socket.on('roomData', ({room, users}) => {
         users
     });
     document.querySelector('#sidebar').innerHTML = html;
-})
+});
